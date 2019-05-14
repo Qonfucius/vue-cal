@@ -2,7 +2,7 @@
   "name": "vue-cal",
   "version": "1.50.3",
   "description": "A Vue JS full calendar, no dependency, no BS. :metal:",
-  "repository": "https://github.com/antoniandre/vue-cal",
+  "repository": "https://github.com/Qonfucius/vue-cal",
   "author": "Antoni Andre <antoniandre.web@gmail.com>",
   "license": "MIT",
   "main": "./dist/vuecal.common.js",
