@@ -110,12 +110,21 @@
     v-chip.pr-1(color="green" outline small disabled)
       v-icon.mr-1 check
       | Create new event
+    v-chip.pr-1(color="green" outline small disabled)
+      v-icon.mr-1 check
+      | min &amp; max dates
+    v-chip.pr-1(color="green" outline small disabled)
+      v-icon.mr-1 check
+      | Today button
     v-chip.pr-1(color="amber darken-1" outline small disabled)
       v-icon.mr-1 timer
       | Support more simultaneous events
     v-chip.pr-1(color="amber darken-1" outline small disabled)
       v-icon.mr-1 timer
       | Drag events
+    v-chip.pr-1(color="deep-orange" outline small disabled)
+      v-icon.mr-1 access_time
+      | Optional week number
     v-chip.pr-1(color="deep-orange" outline small disabled)
       v-icon.mr-1 access_time
       | Optional tooltip on events
@@ -142,9 +151,28 @@
       | Horizontal timeline
 
   h2.headline.mt-5.mb-3.title Github project
-  v-layout.mb-5(align-center shrink)
+  v-layout.mb-3(align-center shrink)
     v-icon.pr-4.lightgrey--text(x-large) fab fa-github
     a(href="https://github.com/antoniandre/vue-cal" target="_blank") //github.com/antoniandre/vue-cal #[v-icon(small color="primary") open_in_new]
+
+  v-layout.mb-5(justify-center style="max-width: 690px;margin: auto")
+    v-icon.flame(size="100").mr-3 whatshot
+    highlight-message(type="tips" no-icon)
+      .title.mt-2.mb-3 #[span.code vue-cal@2.0.0] is coming out soon!
+      .body-2.
+        The V2 will include performance improvements, smaller package size, bug fixes, new features (like event
+        creation on simple click, or overriding the editable-event option per event)
+        and a fresh codebase to start developing the Drag &amp; Drop feature.#[br]
+        #[span.code vue-cal@2.0.0] will require #[span.code vue@2.6.0+].
+      .mt-2
+        v-icon.mr-2(size="20") info_outline
+        span Follow my progress in the #[a.code.subheading(href="https://github.com/antoniandre/vue-cal/compare/v2" target="_blank") V2] branch!
+      .mt-2.layout.flex.align-center
+        v-icon.mr-2(size="20") favorite_border
+        span Thank you to all the supporters!
+        v-spacer
+        v-icon.mr-1(size="17") attach_money
+        a(href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ZKGPRTRGWNDGC" target="_blank") Support the project
 
   highlight-message(type="info")
     strong Important Notes#[br]
@@ -216,7 +244,8 @@
         | Try it yourself:
         | #[a.ml-2(href="https://codepen.io/antoniandre/pen/pGJWjL" target="_blank") Basic calendar],
         | #[a.ml-2(href="https://codepen.io/antoniandre/pen/rPzWOJ" target="_blank") Calendar with events],
-        | #[a.ml-2(href="https://codepen.io/antoniandre/pen/jJbygw?editors=1010" target="_blank") Calendar with custom events on month view].
+        | #[a.ml-2(href="https://codepen.io/antoniandre/pen/jJbygw?editors=1010" target="_blank") Calendar with custom events on month view],
+        | #[a.ml-2(href="https://codepen.io/antoniandre/pen/WWRLgG?editors=1010" target="_blank") Calendar with custom cells].
 
   h3.title
     a(href="#ex--basic")
@@ -244,7 +273,7 @@
   p.
     Extra-small, no timeline, hidden view selector &amp; custom arrows (using the reserved slots #[span.code arrow-prev] &amp; #[span.code arrow-next]).#[br]
     With a hidden view selector, you can still navigate between the different views: double click cell to go to a narrower view, click title to go to a broader view.
-  v-card.my-2.ma-auto.main-content(style="width: 250px;height: 260px;")
+  v-card.my-2.ma-auto.main-content(style="width: 250px;height: 260px")
     vue-cal.vuecal--green-theme(hide-view-selector :time="false" default-view="month" xsmall)
       v-icon(slot="arrow-prev") arrow_back
       v-icon(slot="arrow-next") arrow_forward
@@ -253,6 +282,67 @@
       &lt;i slot="arrow-prev" aria-hidden="true" class="v-icon material-icons"&gt;arrow_back&lt;/i&gt;
       &lt;i slot="arrow-next" aria-hidden="true" class="v-icon material-icons"&gt;arrow_forward&lt;/i&gt;
     &lt;/vue-cal&gt;
+
+  highlight-message For all the options details, refer to the #[a(href="#api") API] section.
+
+  //- Example.
+  h4.title
+    a(href="#ex--min-max-dates") # Minimum / maximum dates &amp; single click to navigate
+    a#ex--min-max-dates(name="ex--min-max-dates")
+  p.
+    With the options #[span.code minDate] &amp; #[span.code maxDate], you can set a
+    time range of selectable cells. All the cells before and after are still visible but
+    will be disabled and not selectable.#[br]
+    You can still navigate through them with arrows.#[br]
+    In this example, the minimum date is set to 15 days behind and the maximum date to
+    15 days ahead.#[br]
+  highlight-message(type="tips")
+    strong.ml-2 Notes:
+    ul
+      li the min and max options accept a formatted string or plain Javascript Date object.
+      li.
+        2 different CSS class are available on out of range cells: #[span.code .before-min]
+        &amp; #[span.code .after-max].
+  v-card.my-2.ma-auto.main-content(style="width: 250px;height: 260px")
+    vue-cal.vuecal--green-theme.ex--min-max-dates(
+      xsmall
+      hide-view-selector
+      click-to-navigate
+      :time="false"
+      default-view="month"
+      :min-date="minDate"
+      :max-date="maxDate")
+  sshpre(language="html-vue" label="Vue Template").
+    &lt;vue-cal
+      xsmall
+      hide-view-selector
+      click-to-navigate
+      :time="false"
+      default-view="month"
+      :min-date="minDate"
+      :max-date="maxDate"&gt;
+    &lt;/vue-cal&gt;
+
+  sshpre(language="js" label="Javascript").
+    computed: {
+      minDate () {
+        let now = new Date()
+        let date = new Date(now)
+        date.setDate(now.getDate() - 15)
+        return date
+      },
+      maxDate () {
+        let now = new Date()
+        let date = new Date(now)
+        date.setDate(now.getDate() + 15)
+        return date
+      }
+    }
+
+  sshpre(language="css" label="CSS").
+    .vuecal__cell.disabled {text-decoration: line-through;}
+    .vuecal__cell.disabled.before-min {color: #b6d6c7;}
+    .vuecal__cell.disabled.after-max {color: #008b8b;}
 
   highlight-message For all the options details, refer to the #[a(href="#api") API] section.
 
@@ -269,9 +359,21 @@
 
   v-layout.ma-auto(row justify-center wrap)
     v-card.ma-2.main-content(style="width: 270px;height: 300px")
-      vue-cal.vuecal--rounded-theme.vuecal--blue-theme(xsmall hide-view-selector 12-hour :time="false" default-view="month" :disable-views="['week']")
+      vue-cal.vuecal--rounded-theme.vuecal--blue-theme(
+        xsmall
+        hide-view-selector
+        12-hour
+        :time="false"
+        default-view="month"
+        :disable-views="['week']")
     v-card.ma-2.main-content(style="width: 270px;height: 300px")
-      vue-cal.vuecal--rounded-theme.vuecal--green-theme(xsmall hide-view-selector 12-hour :time="false" default-view="month" :disable-views="['week']")
+      vue-cal.vuecal--rounded-theme.vuecal--green-theme(
+        xsmall
+        hide-view-selector
+        12-hour
+        :time="false"
+        default-view="month"
+        :disable-views="['week']")
   sshpre(language="html-vue" label="Vue Template").
     &lt;vue-cal class="vuecal--rounded-theme vuecal--green-theme"
              xsmall
@@ -313,7 +415,7 @@
   h3.title
     a(href="#ex--timeline")
       v-icon.mr-2 access_time
-      | Timeline
+      | Timeline &amp; Today
 
   //- Example.
   h4.title
@@ -345,12 +447,86 @@
     If you don't want this feature you can simply hide it: #[span.code .vuecal__now-line {display: none}].#[br]
     This feature has no impact on performance.
   v-card.my-2.ma-auto.main-content(style="width: 360px;height: 360px;max-width: 100%")
-    vue-cal.vuecal--green-theme.ex--today-current-time-and-disabled-views(xsmall :time-cell-height="26" default-view="day" :disable-views="['years', 'year', 'month']")
+    vue-cal.vuecal--green-theme.ex--today-current-time-and-disabled-views(
+      xsmall
+      :time-cell-height="26"
+      default-view="day"
+      :disable-views="['years', 'year', 'month']")
   sshpre(language="html-vue" label="Vue Template").
     &lt;vue-cal xsmall
              default-view="day"
              :disable-views="['years', 'year', 'month']"&gt;
     &lt;/vue-cal&gt;
+
+  //- Example.
+  h4.title
+    a(href="#ex--adding-a-today-button") # Adding a Today button
+    a#ex--adding-a-today-button(name="ex--adding-a-today-button")
+  p.
+    By default the selected date is today. But if you get lost in time travel, you can add
+    a Today button to select Today's date with the option #[span.code today-button].#[br]
+    Like navigation arrows, there is also a slot to customize as you want.#[br]
+    Bellow are the default Today button on the left and a custom one with icon and tooltip on the right.
+  p.ex--adding-a-today-button
+    | If you are not satisfied with the position of this button, you can also place it
+    | outside of Vue Cal like so:
+    v-btn.today-button(small color="primary" outline round @click="selectedDate = new Date()") Another Today Button
+    | #[br]You might want to change view as well when going to Today's date, here is an example how:
+    a.mx-1(href="https://codepen.io/antoniandre/pen/yrREOL?editors=1010" target="_blank") Today Button
+    v-icon(small color="green lighten-2") fab fa-codepen
+  v-layout(justify-center)
+    v-card.my-2.mr-3.main-content(style="max-width: 280px;height: 250px")
+      vue-cal.vuecal--green-theme.ex--adding-a-today-button(
+        ref="vuecal2"
+        xsmall
+        hide-weekends
+        :disable-views="['years']"
+        :time="false"
+        today-button
+        default-view="month"
+        :selected-date="selectedDate || new Date(new Date().getFullYear(), 11, 31)")
+    v-card.my-2.main-content(style="max-width: 280px;height: 250px")
+      vue-cal.vuecal--green-theme.ex--adding-a-today-button(
+        ref="vuecal2"
+        xsmall
+        hide-weekends
+        :disable-views="['years']"
+        :time="false"
+        today-button
+        default-view="month"
+        :selected-date="selectedDate || new Date(new Date().getFullYear(), 11, 31)")
+        div(slot="today-button")
+          v-tooltip(bottom)
+            v-btn.ma-0(small fab slot="activator" depressed)
+              v-icon(color="primary" size="20") my_location
+            span Go to Today's date
+  sshpre(language="html-vue" label="Vue Template").
+    &lt;vue-cal ref="vuecal"
+             xsmall
+             hide-weekends
+             :disable-views="['years']"
+             :time="false"
+             today-button
+             default-view="month"
+             :selected-date="selectedDate"&gt;
+      &lt;!-- Optional slot for the custom button. --&gt;
+      &lt;div slot="today-button"&gt;
+        &lt;!-- Using Vuetify --&gt;
+        &lt;v-tooltip&gt;
+          &lt;v-btn slot="activator"&gt;
+            &lt;v-icon&gt;my_location&lt;/v-icon&gt;
+          &lt;/v-btn&gt;
+          &lt;span&gt;Go to Today's date&lt;/span&gt;
+        &lt;/v-tooltip&gt;
+      &lt;/div&gt;
+    &lt;/vue-cal&gt;
+
+    &lt;button @click="selectedDate = new Date()"&gt;ANOTHER TODAY BUTTON&lt;/button&gt;
+  sshpre(language="js" label="Javascript").
+    data: () => ({
+      // Default to next new year eve.
+      selectedDate: new Date(new Date().getFullYear(), 11, 31)
+    })
 
   h3.title
     a(href="#ex--timeless-events")
@@ -359,7 +535,7 @@
 
   //- Example.
   h4.title
-    a(href="#ex--timeless-events") # Timeless Events
+    a(href="#ex--timeless-events") # Timeless events
     a#ex--timeless-events(name="ex--timeless-events")
   p.
     The events have associated dates but no time information.#[br]
@@ -461,6 +637,7 @@
              :on-event-click="onEventClick"&gt;
     &lt;/vue-cal&gt;
     ...
+    &lt;!-- Using Vuetify --&gt;
     &lt;v-dialog v-model="showDialog"&gt;
       &lt;v-card&gt;
         &lt;v-card-title&gt;
@@ -595,7 +772,9 @@
     /* Dot indicator */
     .vuecal__cell-events-count {
       width: 4px;
+      min-width: 0;
       height: 4px;
+      padding: 0;
       color: transparent;
     }
 
@@ -649,15 +828,15 @@
   h4.title
     a(href="#ex--edit-delete-create-events") # Edit, delete &amp; create events
     a#ex--edit-delete-create-events(name="ex--edit-delete-create-events")
-  p.
-    The option #[span.code editable-events] Allows editing event title, deleting
-    (by clicking and holding an event), resizing (by dragging handle) and creating
-    new event (by clicking and holding a cell).#[br]#[br]
-    Event creation is only possible on a day cell, so not on years &amp; year views.#[br]
-    #[em Learn more about event creation in the #[a(href="#ex--more-advanced-event-creation") more advanced event creation] example.]
-    #[br]#[br]
-    Vue Cal emits events on calendar event change, read more about it in the
-    #[a(href="#ex--emitted-events") emitted events] example.
+  p
+    | The option #[span.code editable-events] Allows editing event title, deleting
+    | (by clicking and holding an event), resizing (by dragging handle) and creating
+    | new event (by clicking and holding a cell).#[br]#[br]
+    | Event creation is only possible on a day cell, so not on years &amp; year views.#[br]
+    em Learn more about event creation in the #[a(href="#ex--more-advanced-event-creation") more advanced event creation] example.
+    | #[br]#[br]
+    | Vue Cal emits events on calendar event change, read more about it in the
+    | #[a(href="#ex--emitted-events") emitted events] example.
 
   v-card.my-2.ma-auto.main-content
     vue-cal.vuecal--green-theme.vuecal--full-height-delete(
@@ -699,7 +878,7 @@
         | See this button?
         v-btn.d-inline-block(small color="primary" @click="customEventCreation") button
         sshpre.ma-0.pa-1(language="html-vue").
-          &lt;v-btn @click="customEventCreation"&gt;button&lt;/v-btn&gt;
+          &lt;button @click="customEventCreation"&gt;button&lt;/button&gt;
       p It will let you choose a date to create an event and set the event content attribute:
       sshpre.mt-3(language="js" label="Javascript").
         // In methods.
@@ -713,7 +892,7 @@
                 // Event props.
                 { title: 'New Event', content: 'yay! 🎉', classes: ['leisure'] }
               )
-            } else alert('Wrong date format.')
+            } else if (date) alert('Wrong date format.')
         }
       v-layout(row align-top wrap)
         v-card.flex.my-2.mr-3.main-content(style="height: 280px")
@@ -721,7 +900,7 @@
             ref="vuecal"
             small
             selected-date="2018-11-19"
-            :time-from="12 * 60"
+            :time-from="10 * 60"
             :time-to="16 * 60"
             :disable-views="['years', 'year']"
             hide-view-selector
@@ -804,8 +983,9 @@
   p.
     Alternatively, like in this example, you can give the user the freedom to set a title,
     content, CSS class &amp; background property - and anything else - in a dialog box.#[br]
-    Here is the markup for the event creation dialog box of this example (Using Vuetify).
+    Here is the markup for the event creation dialog box of this example.
   sshpre(language="html-vue" label="Vue Template").
+    &lt;!-- Using Vuetify --&gt;
     &lt;v-dialog v-model="showEventCreationDialog" :persistent="true" max-width="420"&gt;
       &lt;v-card&gt;
         &lt;v-card-title&gt;
@@ -930,9 +1110,9 @@
       :events="overlappingEvents"
       :no-event-overlaps="!overlapEvents")
   sshpre(language="html-vue" label="Vue Template").
-    &lt;v-btn @click="overlapEvents = !overlapEvents;$forceUpdate()"&gt;
+    &lt;button @click="overlapEvents = !overlapEvents;$forceUpdate()"&gt;
       :no-event-overlaps="{{ '\{\{ overlapEvents ? \'false\' : \'true\' \}\}' }}"
-    &lt;/v-btn&gt;
+    &lt;/button&gt;
 
     &lt;vue-cal selected-date="2018-11-19"
              :time-from="10 * 60"
@@ -1075,12 +1255,12 @@
       :events-on-month-view="[true, 'short'][shortEventsOnMonthView * 1]"
       :events="allDayEvents")
   sshpre(language="html-vue" label="Vue Template").
-    &lt;v-btn @click="showAllDayEvents = (showAllDayEvents + 1) % 3"&gt;
+    &lt;button @click="showAllDayEvents = (showAllDayEvents + 1) % 3"&gt;
       :show-all-day-events="{{ "\{\{ [\"'short'\", 'true', 'false'][showAllDayEvents] \}\}" }}"
-    &lt;/v-btn&gt;
-    &lt;v-btn @click="shortEventsOnMonthView = !shortEventsOnMonthView"&gt;
+    &lt;/button&gt;
+    &lt;button @click="shortEventsOnMonthView = !shortEventsOnMonthView"&gt;
       :events-on-month-views="{{ "\{\{ ['true', \"'short'\"][shortEventsOnMonthView * 1] \}\}" }}"
-    &lt;/v-btn&gt;
+    &lt;/button&gt;
 
     &lt;vue-cal selected-date="2019-02-11"
              :time-from="7 * 60"
@@ -1214,7 +1394,7 @@
     a#ex--sync-two-calendars(name="ex--sync-two-calendars")
   p.
     In this example the right calendar is used as a date picker and the selected date is
-    updated on the left calendar via the #[span.code @day-focus] event listener.#[br]
+    updated on the left calendar via the #[span.code @cell-focus] event listener.#[br]
     To know more about emitted events refer to the
     #[a(href="#ex--emitted-events") emitted events example].
 
@@ -1233,7 +1413,7 @@
       hide-view-selector
       default-view="month"
       :disable-views="['years', 'year', 'week', 'day']"
-      @day-focus="selectedDate = $event"
+      @cell-focus="selectedDate = $event"
       style="max-width: 270px;height: 290px;transform: scale(0.9)")
   sshpre(language="html-vue" label="Vue Template").
     &lt;vue-cal small
@@ -1250,7 +1430,7 @@
       hide-view-selector
       default-view="month"
       :disable-views="['years', 'year', 'week', 'day']"
-      @day-focus="selectedDate = $event"
+      @cell-focus="selectedDate = $event"
       class="vuecal--blue-theme vuecal--rounded-theme"
       style="max-width: 270px;height: 290px"&gt;
     &lt;/vue-cal&gt;
@@ -1287,13 +1467,13 @@
       hide-weekends
       :events="eventsCopy")
   sshpre(language="html-vue" label="Vue Template").
-    &lt;v-btn @click="events.push({
+    &lt;button @click="events.push({
            start: '2018-11-20 12:00',
            end: '2018-11-20 17:00',
            title: 'A new event',
            class: 'blue-event'
-    })"&gt;Add an event&lt;/v-btn&gt;
-    &lt;v-btn @click="events.pop()"&gt;Remove last event&lt;/v-btn&gt;
+    })"&gt;Add an event&lt;/button&gt;
+    &lt;button @click="events.pop()"&gt;Remove last event&lt;/button&gt;
 
     &lt;vue-cal selected-date="2018-11-19"
              :time-from="7 * 60"
@@ -1330,11 +1510,11 @@
   ul
     li #[span.code ready]
     li #[span.code view-change]
-    li #[span.code day-click] - is a JS native #[span.code Date] object
-    li #[span.code day-focus] - is a JS native #[span.code Date] object
+    li #[span.code cell-click] - is a JS native #[span.code Date] object
+    li #[span.code cell-focus] - is a JS native #[span.code Date] object
   highlight-message(no-icon).
-    #[span.code day-click] is fired every time you click a day, whereas
-    #[span.code day-focus] is fired only when the selected day changes.
+    #[span.code cell-click] is fired every time you click a day, whereas
+    #[span.code cell-focus] is fired only when the selected day changes.
   highlight-message(no-icon)
     | The emitted events #[span.code ready] &amp; #[span.code view-change] return an object:#[br]
     sshpre.mt-2(language="js").
@@ -1344,6 +1524,7 @@
         endDate: [Date], // View end - JS native Date object.
         firstCellDate: [Date], // Month view only, in case cell is out of current month - JS native Date object.
         lastCellDate: [Date], // Month view only, in case cell is out of current month - JS native Date object.
+        outOfScopeEvents: [Array], // Month view only, all the events that are out of the current month.
         events: [Array], // All the events in the current view.
         week: [Integer] // Week number. Only returned if view is 'week'.
       }
@@ -1402,8 +1583,8 @@
       :events="eventsCopy2"
       @ready="logEvents('ready', $event)"
       @view-change="logEvents('view-change', $event)"
-      @day-click="logEvents('day-click', $event)"
-      @day-focus="logEvents('day-focus', $event)"
+      @cell-click="logEvents('cell-click', $event)"
+      @cell-focus="logEvents('cell-focus', $event)"
       @event-focus="logEvents('event-focus', $event)"
       @event-mouse-enter="logEvents('event-mouse-enter', $event)"
       @event-mouse-leave="logEvents('event-mouse-leave', $event)"
@@ -1423,8 +1604,8 @@
              :events="events"
              @ready="logEvents('ready', $event)"
              @view-change="logEvents('view-change', $event)"
-             @day-click="logEvents('day-click', $event)"
-             @day-focus="logEvents('day-focus', $event)"
+             @cell-click="logEvents('cell-click', $event)"
+             @cell-focus="logEvents('cell-focus', $event)"
              @event-focus="logEvents('event-focus', $event)"
              @event-mouse-enter="logEvents('event-mouse-enter', $event)"
              @event-mouse-leave="logEvents('event-mouse-leave', $event)"
@@ -1521,7 +1702,6 @@
 
   v-card.my-2.ma-auto.main-content(style="width: 300px;height: 360px;max-width: 100%")
     vue-cal.vuecal--green-theme.ex--custom-events-count(
-      :class="`event-indicator--${indicatorStyle}`"
       selected-date="2018-11-19"
       xsmall
       :time-from="10 * 60"
@@ -1570,7 +1750,14 @@
 
   sshpre(language="css" label="CSS").
     .vuecal__cell-events-count {background: transparent;}
-    .vuecal__cell-events-count span {background: #42b983;height: 100%;border-radius: 12px;display: block;}
+    .vuecal__cell-events-count span {
+      background: #42b983;
+      height: 100%;
+      min-width: 12px;
+      padding: 0 3px;
+      border-radius: 12px;
+      display: block;
+    }
 
   //- Example.
   h4.title
@@ -1599,8 +1786,9 @@
       sshpre(language="js").mt-2.mb-3.
         {
           id: {String}, // Current view, one of: years, year, month, week, day.
-          startDate: {Date}, // Javscript Date object.
-          selectedDate: {Date} // Javscript Date object.
+          startDate: {Date}, // JavaScript Date object.
+          endDate: {Date}, // JavaScript Date object.
+          selectedDate: {Date} // JavaScript Date object.
         }
   p.
     You can use one or the other to format the title as you wish.#[br]
@@ -1620,16 +1808,18 @@
       sshpre(language="js").mt-2.mb-2.
         {
           content: {String}, // Pre-formatted cell content if any.
-          date: {Date},
-          formattedDate: {String}, // E.g. "2019-04-05".
+          startDate: {Date}, // JavaScript Date object.
+          endDate: {Date}, // JavaScript Date object.
+          formattedDate: {String}, // formatted start date. E.g. "2019-04-05".
           today: {Boolean}
         }
     li #[span.code view], object containing the active view info.
       sshpre(language="js").mt-2.mb-2.
         {
           id: {String}, // Current view, one of: years, year, month, week, day.
-          startDate: {Date}, // Javscript Date object.
-          selectedDate: {Date} // Javscript Date object.
+          startDate: {Date}, // JavaScript Date object.
+          endDate: {Date}, // JavaScript Date object.
+          selectedDate: {Date} // JavaScript Date object.
         }
     li #[span.code split], when splitting days, object containing the current split info.
     li #[span.code events], array containing all the events of the current cell or split.
@@ -1744,7 +1934,7 @@
     li #[span.code view]: The current selected view id.
   p.mt-2.
     You can set any custom attribute you want on an event, they will then be accessible in your custom event renderer!#[br]
-    Note that #[span.code eid] is a reserved keyword.
+    Note that #[span.code _eid] is a reserved keyword.
 
   v-card.my-2.ma-auto.main-content(style="height: 523px")
     vue-cal.vuecal--green-theme.ex--custom-event-rendering(
@@ -1815,7 +2005,10 @@
     hideWeekends:           [Boolean],         default: false
     disableViews:           [Array],           default: []
     defaultView:            [String],          default: 'week'
+    todayButton:            [Boolean],         default: false
     selectedDate:           [String, Date],    default: ''
+    minDate:                [String, Date],    default: ''
+    maxDate:                [String, Date],    default: ''
     startWeekOnSunday:      [Boolean],         default: false
     small:                  [Boolean],         default: false
     xsmall:                 [Boolean],         default: false
@@ -1839,6 +2032,7 @@
     showAllDayEvents:       [Boolean, String], default: false
     onEventClick:           [Function],        default: null
     onEventDblclick:        [Function],        default: null
+    onEventCreate:          [Function],        default: null
 
   ul.pl-0.api-options
     li
@@ -1920,9 +2114,14 @@
         Allows you to set a default view, for the first time you load the calendar.#[br]
         Accepts one of 'years', 'year', 'month', 'week', 'day'.
     li
+      code.mr-2 todayButton
+      span.code [Boolean], default: false
+      p Adds a Today button in the title bar to quickly go to Today's date.#[br]
+    li
       code.mr-2 selectedDate
       span.code [String, Date], default: ''
       p.
+        Accepts a formatted string or plain JS Date object.#[br]
         Set a selected date, for the first time you load the calendar.#[br]
         This day will be highlighted and the first view will naturally show this date.#[br]
         E.g. setting a date in year 2000 with a defaultView of week, will show you that week of year 2000.#[br]#[br]
@@ -1932,6 +2131,20 @@
         A correct string date format is #[code {{ currentDateFormatted }}] or
         #[code="{{ currentDateFormatted.split(' ')[0] }}"] if you don't need the time.
         Only these formats will work in string. You can also provide a native Javascript Date object.
+    li
+      code.mr-2 minDate
+      span.code [String, Date], default: ''
+      p.
+        Accepts a formatted string or plain JS Date object.#[br]
+        Set a minimum date for the cells to be selectable.#[br]
+        By default the cell will be grayed out when out of range but CSS classes let you customize this.
+    li
+      code.mr-2 maxDate
+      span.code [String, Date], default: ''
+      p.
+        Accepts a formatted string or plain JS Date object.#[br]
+        Set a maximum date for the cells to be selectable.#[br]
+        By default the cell will be grayed out when out of range but CSS classes let you customize this.
     li
       code.mr-2 startWeekOnSunday
       span.code [Boolean], default: false
@@ -2107,6 +2320,13 @@
         this function receives 2 parameters: #[span.code event], the double clicked calendar event,
         and #[span.code e], the associated JavaScript DOM event.
     li
+      code.mr-2 onEventCreate
+      span.code [Function], default: null
+      p.
+        A callback function to execute when an event is created.#[br]
+        this function receives 2 parameters: #[span.code event], the created event,
+        and #[span.code deleteEvent], a function to delete the created event.
+    li
       code.mr-2 events
       span.code [Array], default: []
       p.
@@ -2149,7 +2369,7 @@
       highlight-message(type="warning")
         ul
           li
-            strong The events are internally identified by the key #[span.code `eid`]. This is a reserved keyword.
+            strong The events are internally identified by the key #[span.code `_eid`]. This is a reserved keyword.
           li.mt-2
             | Correct date formats are #[code {{ currentDateFormatted }}] or
             | #[code="{{ currentDateFormatted.split(' ')[0] }}"] if you don't want any time in the whole calendar.
@@ -2176,14 +2396,15 @@
     .vuecal__menu, .vuecal__cell-events-count {background-color: #42b983;}
     .vuecal__menu li {border-bottom-color: #fff;color: #fff;}
     .vuecal__menu li.active {background-color: rgba(255, 255, 255, 0.15);}
-    .vuecal__title {background-color: #e4f5ef;}
+    .vuecal__title-bar {background-color: #e4f5ef;}
     .vuecal__cell.today, .vuecal__cell.current {background-color: rgba(240, 240, 255, 0.4);}
     .vuecal:not(.vuecal--day-view) .vuecal__cell.selected {background-color: rgba(235, 255, 245, 0.4);}
     .vuecal__cell.selected:before {border-color: rgba(66, 185, 131, 0.5);}
 
   p
     strong Rounded Theme#[br]
-    | You can apply the rounded cells theme like in Example #[strong # Calendar themes - Rounded cells], with the CSS class #[span.code vuecal--rounded-theme].
+    | You can use the rounded cells theme like in the Example #[a(href="#ex--calendar-themes") Calendar themes - Rounded cells],
+    | by applying the CSS class #[span.code vuecal--rounded-theme] to the Vue Cal wrapper.
 
   h3.mt-5 # Responsiveness &amp; Media Queries
   p.
@@ -2206,10 +2427,44 @@
     a(href="#release-notes") Release Notes
     a#release-notes(name="release-notes")
 
-  //- div #[strong Version 1.40.0] Externalize all locales from main library
+  //- div #[strong Version 1.60.0] Externalize all locales from main library
     highlight-message(type="success").
       This will ensure Vue Cal does not increase its file size as more translations are contributed.#[br]
       Now, only the locale you need will be loaded on demand (as a separate request).
+  div #[strong Version 1.59.0] Add Czech language
+  div #[strong Version 1.58.0] Add Ukrainian language
+  div #[strong Version 1.57.0] Add an option to display a Today button
+    highlight-message(type="success").
+      The CSS class of the title bar has changed from #[span.code .vuecal__title] to #[span.code .vuecal__title-bar].#[br]
+      The class #[span.code .vuecal__title] is now only wrapping the title, inside the #[span.code .vuecal__title-bar].#[br]
+    highlight-message(type="tips").
+      If you have a custom theme, you will need to update it as per the theme example in the #[a(href="#css-notes") CSS Notes].
+  div #[strong Version 1.56.0] Allow #[span.code minCellWidth] independently of #[span.code splitDays]
+  div #[strong Version 1.55.0] Set view and cells end dates to 23:59:59
+    highlight-message(type="success")
+      ul
+        li This update ensures the coverage of the full range of days when fetching your events from an AJAX call.
+        li.
+          The #[span.code day-click] &amp; #[span.code day-focus] emitted events are renamed to
+          #[span.code cell-click] &amp; #[span.code cell-focus] as they are also triggered on
+          #[span.code years] &amp; #[span.code year] views.
+        li Adaptive width on events-count (for count numbers on more than 1 digit)
+        li On month view, removed redundant css classes from events (classes related to event overlaps)
+  div #[strong Version 1.54.0] Add min &amp; max dates for cell selection
+    highlight-message(type="success")
+      ul
+        li.
+          The CSS class #[span.code .splitted] (appearing on the #[span.code .vuecal__cell] element
+          when the cell is split) is renamed to #[span.code .vuecal__cell--has-splits].
+        li.
+          The #[span.code selectedDate] option, like min &amp; max dates, now also accept a
+          plain JS Date Object.
+  div #[strong Version 1.53.0] Add click/dblclick ability on weekdays headings on week view
+  div #[strong Version 1.52.0] Separate #[span.code outOfScopeEvents] &amp; #[span.code events] in month view
+    highlight-message(type="success").
+      In month view only, the emitted events #[span.code ready] &amp; #[span.code view-change]
+      now return an object containing a new #[span.code outOfScopeEvents] array separated from the events array
+  div #[strong Version 1.51.0] Add Bosnian &amp; Serbian languages
   div #[strong Version 1.50.0] Create a new event on cell click &amp; hold
   div #[strong Version 1.49.0] Add Hebrew language
   div #[strong Version 1.48.0] Add Bulgarian language
@@ -2222,7 +2477,7 @@
       For consistency, the slots #[span.code arrowPrev] &amp; #[span.code arrowNext]
       are now renamed to #[span.code arrow-prev] &amp; #[span.code arrow-next].
 
-  div #[strong Version 1.45.0] Add #[span.code day-click] emitted event
+  div #[strong Version 1.45.0] Add #[span.code cell-click] emitted event
   div #[strong Version 1.44.0] Add Slovenian &amp; Hungarian languages
   div #[strong Version 1.43.0] Add Catalan language
   div #[strong Version 1.42.0] Add Norwegian language
@@ -2241,7 +2496,8 @@
   div
     | #[strong Version 1.33.0] Minor internal structure improvements
     highlight-message(type="success").
-      In order to make the internal structure less verbose, the #[span.code events-count] slot use has been simplified.#[br]
+      In order to make the internal structure less verbose, the #[span.code events-count] slot
+      use has been simplified.#[br]
       Refer to the #[a(href="#ex--events-indicators") Month view with events indicators] example.
       A few default CSS rules have also been updated.#[br]
   div
@@ -2273,7 +2529,7 @@
   div #[strong Version 1.16.0] Highlight Today's current time
   div #[strong Version 1.15.0] Add German language
   div
-    | #[strong Version 1.14.0] Add custom time format &amp; emit event on #[span.code day-focus]
+    | #[strong Version 1.14.0] Add custom time format &amp; emit event on #[span.code cell-focus]
     highlight-message(type="success")
       ul
         li The emitted #[span.code view-change] event now returns an object with a view name and startDate.
@@ -2284,8 +2540,8 @@
   div
     | #[strong Version 1.11.0] Add events indicators in month view
     highlight-message(type="tips").
-      If you have created a theme, update it with the new indicator:
-      #[span.code .vuecal__cell-events-count]. Refer to the updated theme example in the #[a(href="#css-notes") CSS Notes].
+      If you have created a custom theme, you will need to update it adding the new indicator
+      #[span.code .vuecal__cell-events-count], as per the theme example in the #[a(href="#css-notes") CSS Notes].
     highlight-message(type="success").
       The default #[span.code time-step] option value is now 60 minutes (previously 30).
   div #[strong Version 1.10.0] Allow no event overlaps
@@ -2425,6 +2681,14 @@ const events = [
     content: '<i class="v-icon material-icons">local_play</i>',
     class: 'leisure',
     split: 1
+  },
+  {
+    start: '2018-11-30 21:00',
+    end: '2018-11-30 23:30',
+    title: 'Another movie tonight',
+    content: '<i class="v-icon material-icons">local_play</i>',
+    class: 'leisure',
+    split: 1
   }
 ]
 
@@ -2432,8 +2696,10 @@ export default {
   components: { VueCal, Sshpre, highlightMessage },
   data: () => ({
     localesList: [
+      { code: 'bs', label: 'Bosnian' },
       { code: 'bg', label: 'Bulgarian' },
       { code: 'ca', label: 'Catalan' },
+      { code: 'cs', label: 'Czech' },
       { code: 'zh-cn', label: 'Chinese (Simplified)' },
       { code: 'hr', label: 'Croatian' },
       { code: 'nl', label: 'Dutch' },
@@ -2449,10 +2715,12 @@ export default {
       { code: 'pt-br', label: 'Portuguese Brasilian' },
       { code: 'ro', label: 'Romanian' },
       { code: 'ru', label: 'Russian' },
+      { code: 'sr', label: 'Serbian' },
       { code: 'sk', label: 'Slovak' },
       { code: 'sl', label: 'Slovenian' },
       { code: 'es', label: 'Spanish' },
       { code: 'sv', label: 'Swedish' },
+      { code: 'uk', label: 'Ukrainian' },
       { code: 'vi', label: 'Vietnamese' }
     ],
     locale: 'zh-cn',
@@ -2783,10 +3051,11 @@ export default {
       return event
     },
     customEventCreation (event) {
-        const date = prompt('Create event on (YYYY-mm-dd)', '2018-11-20')
-        if (/^\d{4}-\d{2}-\d{2}$/.test(date)) {
-          this.$refs.vuecal.createEvent(date, 12 * 60, { title: 'New Event', content: 'yay! 🎉', classes: ['leisure'] })
-        } else alert('Wrong date format.')
+      const date = prompt('Create event on (YYYY-mm-dd)', '2018-11-20')
+      if (/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+        this.$refs.vuecal.createEvent(date, 12 * 60, { title: 'New Event', content: 'yay! 🎉', classes: ['leisure'] })
+      }
+      else if (date) alert('Wrong date format.')
     }
   },
   computed: {
@@ -2797,6 +3066,18 @@ export default {
       const h = this.now.getHours()
       const min = this.now.getMinutes()
       return `${y}-${(m < 10 ? '0' : '') + m}-${(d < 10 ? '0' : '') + d} ${(h < 10 ? '0' : '') + h}:${(min < 10 ? '0' : '') + min}`
+    },
+    minDate () {
+      let now = new Date()
+      let date = new Date(now)
+      date.setDate(now.getDate() - 15)
+      return date
+    },
+    maxDate () {
+      let now = new Date()
+      let date = new Date(now)
+      date.setDate(now.getDate() + 15)
+      return date
     }
   }
 }
@@ -2846,6 +3127,13 @@ $primary: #42b983;
     padding: 0 3px;
   }
 
+  .flame {
+    max-width: 90px;
+    opacity: 0.6;
+    color: rgb(254, 247, 176);
+    text-shadow: 1px 0 0 #fd0, -1px 0 0 #fd0, 0 1px 0 #fd0, 0 -1px 0 #fd0;
+  }
+
   .api-options {list-style-type: none;}
   .api-options > li {margin-top: 2em;}
   .api-options p {margin-left: 1.5em;margin-top: 0.5em;}
@@ -2863,6 +3151,11 @@ $primary: #42b983;
 
 // Examples.
 // =====================================================
+.ex--min-max-dates {
+  .disabled {text-decoration: line-through;}
+  .before-min {color: #b6d6c7;}
+  .after-max {color: #008b8b;}
+}
 // Custom vue-cal title & "no event" text example.
 .ex--custom-title-and-cells {
   .vuecal__cell-events-count {margin-top: -2px;}
@@ -2899,16 +3192,30 @@ $primary: #42b983;
 
 .event-indicator--dot .vuecal__cell-events-count {
   width: 4px;
+  min-width: 0;
   height: 4px;
+  padding: 0;
   color: transparent;
 }
 
 .ex--events-indicators {
-  .vuecal__cell-events-count span {background: $primary;height: 100%;border-radius: 12px;display: block;}
+  .vuecal__cell-events-count span {
+    background: $primary;
+    height: 100%;
+    border-radius: 12px;
+    display: block;
+  }
 }
 
 .ex--custom-events-count {
-  .vuecal__cell-events-count span {background: $primary;height: 100%;border-radius: 12px;display: block;}
+  .vuecal__cell-events-count span {
+    background: $primary;
+    height: 100%;
+    min-width: 12px;
+    padding: 0 3px;
+    border-radius: 12px;
+    display: block;
+  }
   .vuecal__cell-events-count {background: transparent;}
 }
 
@@ -2928,6 +3235,17 @@ $primary: #42b983;
 .event-indicator--cell .vuecal__cell-events-count {display: none;}
 
 .vuecal--month-view .vuecal__no-event {display: none;}
+
+// Today button example.
+.ex--adding-a-today-button {
+  .today-button {
+    // font-size: 0.7em;
+    min-width: 0;
+    height: auto;
+    padding: 1px 8px;
+  }
+  .v-btn--floating.v-btn--small {width: 26px;height: 26px;background-color: transparent !important;}
+}
 
 // Split days example.
 .vuecal__cell-split.him {background-color: rgba(221, 238, 255, 0.5);}

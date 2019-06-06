@@ -29,6 +29,7 @@
             | BASIC
           v-list-tile(href="#ex--basic" v-scroll-to="'#ex--basic'") Basic, hide weekends
           v-list-tile(href="#ex--small-cal" v-scroll-to="'#ex--small-cal'") Small calendar, no view selector, custom arrows
+          v-list-tile(href="#ex--min-max-dates" v-scroll-to="'#ex--min-max-dates'") Min / max dates &amp; single click to navigate
           v-list-tile(href="#ex--calendar-themes" v-scroll-to="'#ex--calendar-themes'") Calendar themes
 
           v-list-tile.heading(href="#ex--internationalization" v-scroll-to="'#ex--internationalization'")
@@ -38,9 +39,10 @@
 
           v-list-tile.heading(href="#ex--timeline" v-scroll-to="'#ex--timeline'")
             v-icon(small).mr-2 access_time
-            | TIMELINE
+            | TIMELINE &amp; TODAY
           v-list-tile(href="#ex--timeline" v-scroll-to="'#ex--timeline'") Timeline
           v-list-tile(href="#ex--today-current-time-and-disabled-views" v-scroll-to="'#ex--today-current-time-and-disabled-views'") Today's current time &amp; disabled views
+          v-list-tile(href="#ex--adding-a-today-button" v-scroll-to="'#ex--adding-a-today-button'") Adding a Today button
 
           v-list-tile.heading(href="#ex--timeless-events" v-scroll-to="'#ex--timeless-events'")
             v-icon(small).mr-2 event
