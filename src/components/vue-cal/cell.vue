@@ -94,7 +94,7 @@ export default {
 
     onCellMouseUp(e, split = null, touch = false) {
       if (this.clickAndRelease && this.mouseDownEvent && this.mouseDownEvent.split === split && this.$parent.view.id === 'day') {
-        this.$parent.onClickAndRelease(this.formattedDate, this.mouseDownEvent, {e, split}, split);
+        this.$parent.onClickAndRelease(this.data.formattedDate, this.mouseDownEvent, {e, split}, split);
         this.mouseDownEvent = null;
       }
     },
