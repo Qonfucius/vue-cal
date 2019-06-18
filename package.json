@@ -14,7 +14,7 @@
     "ui"
   ],
   "files": [
-    "dist",
+    "src/components/vue-cal/",
     "package.json",
     "README.md",
     "LICENSE"
