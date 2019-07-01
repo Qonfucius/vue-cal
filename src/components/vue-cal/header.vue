@@ -29,6 +29,10 @@
     :transition-direction="transitionDirection"
     :switch-to-narrower-view="switchToNarrowerView"
   )
+  .vuecal__flex.vuecal__split-days-in-header(row grow v-if="splitDaysInHeader")
+    .vuecal__time-column
+    .vuecal__flex(grow wrap column v-for="(split, i) in splitDays")
+      slot(name="split-day" :split="split")
 </template>
 
 <script>
@@ -58,6 +62,14 @@ export default {
     switchToNarrowerView: {
       type: Function,
       default: () => {}
+    },
+    splitDays: {
+      type: Array,
+      default: () => []
+    },
+    splitDaysInHeader: {
+      type: Boolean,
+      default: false
     }
   },
 
@@ -200,6 +212,14 @@ export default {
     }
 
     &--prev i.angle {border-width: 2px 0 0 2px;}
+  }
+
+  &__split-days-in-header {
+    padding-right: 15px;
+
+    .split-day {
+      text-align: center;
+    }
   }
 }
 

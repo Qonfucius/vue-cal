@@ -6,7 +6,9 @@
     :months="months"
     :week-days="weekDays"
     :week-days-short="weekDaysShort"
-    :switch-to-narrower-view="switchToNarrowerView")
+    :switch-to-narrower-view="switchToNarrowerView"
+    :split-days="splitDays"
+    :split-days-in-header="splitDaysInHeader")
     slot(slot="arrow-prev" name="arrow-prev")
       i.angle
     slot(slot="arrow-next" name="arrow-next")
@@ -14,6 +16,8 @@
     slot(slot="today-btn" name="today-button")
       span.default {{ texts.today }}
     slot(slot="title" name="title" :title="viewTitle" :view="view") {{ viewTitle }}
+    slot(slot="split-day" name="split-day" :split="split" slot-scope="{ split }")
+      .split-day(grow) {{ split.label }}
 
   .vuecal__flex.vuecal__body(v-if="!hideBody" grow)
     transition(:name="`slide-fade--${transitionDirection}`" :appear="transitions")
@@ -72,8 +76,8 @@
                   :max-timestamp="maxTimestamp"
                   :splits="hasSplits && splitDays || []")
                   div(slot="cell-content" slot-scope="{ events, split, selectCell }")
-                    slot(name="cell-content" :cell="cell" :view="view" :goNarrower="selectCell" :events="events")
-                      .split-label(v-if="split" v-html="split.label")
+                    slot(name="cell-content" :cell="cell" :view="view" :goNarrower="selectCell" :events="events" :split="split")
+                      .split-label(v-if="split && !splitDaysInHeader" v-html="split.label")
                       .vuecal__cell-date(v-if="cell.content" v-html="cell.content")
                       .vuecal__cell-events-count(v-if="((view.id === 'month' && !eventsOnMonthView) || (['years', 'year'].includes(view.id) && eventsCountOnYearView)) && events.length")
                         slot(name="events-count" :view="view" :events="events") {{ events.length }}
@@ -250,7 +254,11 @@ export default {
     transitions: {
       type: Boolean,
       default: true
-    }
+    },
+    splitDaysInHeader: {
+      type: Boolean,
+      default: false
+    },
   },
   data: function () {
     return {
