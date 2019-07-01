@@ -31,8 +31,9 @@
   )
   .vuecal__flex.vuecal__split-days-in-header(row grow v-if="splitDaysInHeader")
     .vuecal__time-column
-    .vuecal__flex(grow wrap column v-for="(split, i) in splitDays")
-      slot(name="split-day" :split="split")
+    .vuecal__flex(grow wrap)
+      .vuecal__flex.split-day(v-for="(split, i) in splitDays" column)
+        slot(name="split-day" :split="split")
 </template>
 
 <script>
@@ -216,7 +217,9 @@ export default {
 
   &__split-days-in-header {
     padding-right: 15px;
-
+    .vuecal__flex {
+      flex: 1 1 0;
+    }
     .split-day {
       text-align: center;
     }
