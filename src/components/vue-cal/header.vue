@@ -216,8 +216,8 @@ export default {
   }
 
   &__split-days-in-header {
-    padding-right: 15px;
-    .vuecal__flex {
+    padding-right: 16px;
+    .vuecal__flex, .vuecal__flex[column] {
       flex: 1 1 0;
     }
     .split-day {

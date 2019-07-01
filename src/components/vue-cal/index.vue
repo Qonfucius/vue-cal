@@ -16,7 +16,7 @@
     slot(slot="today-btn" name="today-button")
       span.default {{ texts.today }}
     slot(slot="title" name="title" :title="viewTitle" :view="view") {{ viewTitle }}
-    slot(slot="split-day" name="split-day" :split="split" slot-scope="{ split }")
+    slot(slot="split-day" name="split-day" :split="split" slot-scope="{ split }" v-if="view.id === 'day'")
       .split-day(grow) {{ split.label }}
 
   .vuecal__flex.vuecal__body(v-if="!hideBody" grow)
