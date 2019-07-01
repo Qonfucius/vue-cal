@@ -1,6 +1,6 @@
 {
   "name": "@qonfucius/vue-cal",
-  "version": "1.59.0",
+  "version": "1.59.1",
   "description": "Fork of Vue JS full calendar, no dependency, no BS. :metal:",
   "repository": "https://github.com/Qonfucius/vue-cal",
   "author": "Antoni Andre <antoniandre.web@gmail.com>",
@@ -32,8 +32,6 @@
     "@vue/eslint-config-standard": "^4.0.0",
     "babel-polyfill": "^6.26.0",
     "node-sass": "^4.12.0",
-    "pug": "^2.0.3",
-    "pug-plain-loader": "^1.0.0",
     "sass-loader": "^7.0.1",
     "simple-syntax-highlighter": "^1.0.6",
     "vue": "^2.6.10",
@@ -42,5 +40,8 @@
     "vue-template-compiler": "^2.6.10",
     "vuetify": "^1.5.14"
   },
-  "dependencies": {}
+  "dependencies": {
+    "pug": "^2.0.3",
+    "pug-plain-loader": "^1.0.0"
+  }
 }
