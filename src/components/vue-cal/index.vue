@@ -9,6 +9,7 @@
     :switch-to-narrower-view="switchToNarrowerView"
     :split-days="splitDays"
     :split-days-in-header="splitDaysInHeader")
+    slot(slot="title-bar" name="title-bar" slot-scope="{ previous, next }" :view="view" :switchView="switchView" :previous="previous" :next="next")
     slot(slot="arrow-prev" name="arrow-prev")
       i.angle
     slot(slot="arrow-next" name="arrow-next")
@@ -16,6 +17,7 @@
     slot(slot="today-btn" name="today-button")
       span.default {{ texts.today }}
     slot(slot="title" name="title" :title="viewTitle" :view="view") {{ viewTitle }}
+    slot(slot="split-day-column" name="split-day-column")
     slot(slot="split-day" name="split-day" :split="split" slot-scope="{ split }" v-if="view.id === 'day'")
       .split-day(grow) {{ split.label }}
 

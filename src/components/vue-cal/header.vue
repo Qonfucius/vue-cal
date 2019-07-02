@@ -7,19 +7,20 @@
       v-for="(v, id) in viewProps.views"
       @click="$parent.switchView(id, null, true)") {{ v.label }}
   .vuecal__title-bar(v-if="!options.hideTitleBar")
-    .vuecal__arrow.vuecal__arrow--prev(@click="previous")
-      slot(name="arrow-prev")
-    .vuecal__flex.vuecal__title(grow)
-      transition(:name="`slide-fade--${transitionDirection}`")
-        span(
-          :class="{ clickable: !!broaderView }"
-          :key="options.transitions ? `${viewProps.view.id}${viewProps.view.startDate.toString()}` : false"
-          @click="switchToBroaderView")
-          slot(name="title")
-    .vuecal__today-btn(v-if="options.todayButton" @click="goToToday")
-      slot(name="today-btn")
-    .vuecal__arrow.vuecal__arrow--next(@click="next")
-      slot(name="arrow-next")
+    slot(name="title-bar" :previous="previous" :next="next")
+      .vuecal__arrow.vuecal__arrow--prev(@click="previous")
+        slot(name="arrow-prev")
+      .vuecal__flex.vuecal__title(grow)
+        transition(:name="`slide-fade--${transitionDirection}`")
+          span(
+            :class="{ clickable: !!broaderView }"
+            :key="options.transitions ? `${viewProps.view.id}${viewProps.view.startDate.toString()}` : false"
+            @click="switchToBroaderView")
+            slot(name="title")
+      .vuecal__today-btn(v-if="options.todayButton" @click="goToToday")
+        slot(name="today-btn")
+      .vuecal__arrow.vuecal__arrow--next(@click="next")
+        slot(name="arrow-next")
   weekdays-headings(
     v-if="viewProps.weekDaysInHeader"
     :vuecal="$parent"
@@ -31,6 +32,7 @@
   )
   .vuecal__flex.vuecal__split-days-in-header(row grow v-if="splitDaysInHeader")
     .vuecal__time-column
+      slot(name="split-day-column")
     .vuecal__flex(grow wrap)
       .vuecal__flex.split-day(v-for="(split, i) in splitDays" column)
         slot(name="split-day" :split="split")
