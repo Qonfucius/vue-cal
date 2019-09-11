@@ -17,6 +17,7 @@
       @click="!isDisabled && selectCell()"
       @dblclick="!isDisabled && options.dblClickToNavigate && $parent.switchToNarrowerView()")
       slot(name="cell-content" :events="events" :selectCell="() => {selectCell(true)}" :split="splits[i - 1]")
+      .vuecal__cell-hover(v-for="(cell, i) in $parent.timeCells" :key="i" :style="`height: ${$parent.timeCellHeight}px`")
       .vuecal__cell-events(
         v-if="events.length && (['week', 'day'].includes(view) || (view === 'month' && options.eventsOnMonthView))")
         event(
