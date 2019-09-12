@@ -17,7 +17,7 @@
       @click="!isDisabled && selectCell()"
       @dblclick="!isDisabled && options.dblClickToNavigate && $parent.switchToNarrowerView()")
       slot(name="cell-content" :events="events" :selectCell="() => {selectCell(true)}" :split="splits[i - 1]")
-      .vuecal__cell-hover(v-for="(cell, i) in $parent.timeCells" :key="i" :style="`height: ${$parent.timeCellHeight}px`")
+      .vuecal__cell-hover(v-if="['week', 'day'].includes(view)" v-for="(cell, i) in $parent.timeCells" :key="i" :style="`height: ${$parent.timeCellHeight}px`")
       .vuecal__cell-events(
         v-if="events.length && (['week', 'day'].includes(view) || (view === 'month' && options.eventsOnMonthView))")
         event(
@@ -94,9 +94,10 @@ export default {
     },
 
     onCellMouseUp(e, split = null, touch = false) {
-      if (this.clickAndRelease && this.mouseDownEvent && this.mouseDownEvent.split === split && this.$parent.view.id === 'day') {
-        this.$parent.onClickAndRelease(this.data.formattedDate, this.mouseDownEvent, {e, split}, split);
-        this.mouseDownEvent = null;
+      if (this.clickAndRelease && this.mouseDownEvent && this.mouseDownEvent.split === split &&
+        (this.$parent.view.id === 'day' || this.$parent.view.id === 'week')) {
+          this.$parent.onClickAndRelease(this.data.formattedDate, this.mouseDownEvent, {e, split}, split);
+          this.mouseDownEvent = null;
       }
     },
 
