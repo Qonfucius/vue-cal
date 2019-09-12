@@ -660,7 +660,8 @@ export default {
     },
 
     getPosition (e) {
-      const rect = e.target.getBoundingClientRect()
+      const rect = e.target.className === 'vuecal__cell-hover' ?
+        e.target.parentElement.getBoundingClientRect() : e.target.getBoundingClientRect();
       const { clientX, clientY } = 'ontouchstart' in window && e.touches ? e.touches[0] : e
       return { x: clientX - rect.left, y: clientY - rect.top }
     },
