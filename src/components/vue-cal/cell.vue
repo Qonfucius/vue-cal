@@ -22,7 +22,7 @@
         @mousedown="onCellClick(j, i)"
         @mouseup="onCellRelease()"
         @mouseenter="onCellHover(j)"
-        :class="{'vuecal__cell-clicked-hover': $parent.clicking === i && $parent.cellsHoveredWhileClicking.includes(j)}"
+        :class="{'vuecal__cell-clicked-hover': $parent.clicking === (view === 'week' ? data.formattedDate : i) && $parent.cellsHoveredWhileClicking.includes(j)}"
         )
       .vuecal__cell-events(
         v-if="events.length && (['week', 'day'].includes(view) || (view === 'month' && options.eventsOnMonthView))")
@@ -138,7 +138,7 @@ export default {
     },
 
     onCellClick (i, split) {
-      this.$parent.clicking = split;
+      this.$parent.clicking = (this.view === 'week' ? this.data.formattedDate : split);
       this.$parent.cellsHoveredWhileClicking.push(i);
     },
 
