@@ -52,7 +52,8 @@
         .vuecal__bg(:class="{ vuecal__flex: !hasTimeColumn }" column)
           .vuecal__flex(row grow)
             .vuecal__time-column(v-if="hasTimeColumn")
-              .vuecal__time-cell(v-for="(cell, i) in timeCells" :key="i" :style="`height: ${timeCellHeight}px`")
+              .vuecal__time-cell(v-for="(cell, i) in timeCells" :key="i" :style="`height: ${timeCellHeight}px`"
+                :class="{'vuecal__time-cell-clicked-hover': clicking && cellsHoveredWhileClicking.includes(i)}")
                 slot(name="time-cell" :hours="cell.hours" :minutes="cell.minutes")
                   span.line {{ cell.label }}
 
@@ -321,7 +322,9 @@ export default {
         }
       },
       mutableEvents: {}, // An indexed array of mutable events updated each time given events array changes.
-      transitionDirection: 'right'
+      transitionDirection: 'right',
+      clicking: null,
+      cellsHoveredWhileClicking: []
     }
   },
 

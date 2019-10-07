@@ -17,7 +17,13 @@
       @click="!isDisabled && selectCell()"
       @dblclick="!isDisabled && options.dblClickToNavigate && $parent.switchToNarrowerView()")
       slot(name="cell-content" :events="events" :selectCell="() => {selectCell(true)}" :split="splits[i - 1]")
-      .vuecal__cell-hover(v-if="['week', 'day'].includes(view)" v-for="(cell, i) in $parent.timeCells" :key="i" :style="`height: ${$parent.timeCellHeight}px`")
+      .vuecal__cell-hover(
+        v-if="['week', 'day'].includes(view)" v-for="(cell, j) in $parent.timeCells" :key="j" :style="`height: ${$parent.timeCellHeight}px`"
+        @mousedown="onCellClick(j, i)"
+        @mouseup="onCellRelease()"
+        @mouseenter="onCellHover(j)"
+        :class="{'vuecal__cell-clicked-hover': $parent.clicking === i && $parent.cellsHoveredWhileClicking.includes(j)}"
+        )
       .vuecal__cell-events(
         v-if="events.length && (['week', 'day'].includes(view) || (view === 'month' && options.eventsOnMonthView))")
         event(
@@ -129,7 +135,23 @@ export default {
     onCellTouchStart (e, split = null) {
       // If not mousedown on an event.
       if (!this.isDOMElementAnEvent(e.target)) this.onCellMouseDown(e, split, true)
-    }
+    },
+
+    onCellClick (i, split) {
+      this.$parent.clicking = split;
+      this.$parent.cellsHoveredWhileClicking.push(i);
+    },
+
+    onCellRelease () {
+      this.$parent.clicking = null;
+      this.$parent.cellsHoveredWhileClicking = [];
+    },
+
+    onCellHover (i) {
+      if (this.$parent.clicking) {
+        this.$parent.cellsHoveredWhileClicking.push(i);
+      }
+    },
   },
 
   computed: {
