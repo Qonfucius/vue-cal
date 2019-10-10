@@ -1,6 +1,6 @@
 {
   "name": "@qonfucius/vue-cal",
-  "version": "1.59.11",
+  "version": "1.59.12",
   "description": "Fork of Vue JS full calendar, no dependency, no BS. :metal:",
   "repository": "https://github.com/Qonfucius/vue-cal",
   "author": "Antoni Andre <antoniandre.web@gmail.com>",

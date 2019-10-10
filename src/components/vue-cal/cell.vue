@@ -85,7 +85,7 @@ export default {
     checkCellOverlappingEvents () {
       if (this.options.time) {
         if (this.splits.length) {
-          this.splits.forEach((s, i) => checkCellOverlappingEvents(this.splitEvents[i]))
+          this.splits.forEach((s, i) => checkCellOverlappingEvents(this.splitEvents[i + 1]))
         }
         else checkCellOverlappingEvents(this.events)
       }
