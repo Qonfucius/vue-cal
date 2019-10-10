@@ -1,12 +1,11 @@
 {
-  "name": "vue-cal",
+  "name": "@qonfucius/vue-cal",
   "version": "2.10.0",
-  "description": "A Vue JS full calendar, no dependency, no BS. :metal:",
-  "repository": "https://github.com/antoniandre/vue-cal",
+  "description": "Fork of Vue JS full calendar, no dependency, no BS. :metal:",
+  "repository": "https://github.com/Qonfucius/vue-cal",
   "author": "Antoni Andre <antoniandre.web@gmail.com>",
   "license": "MIT",
-  "main": "./dist/vuecal.common.js",
-  "unpkg": "dist/vuecal.umd.min.js",
+  "main": "./src/components/vue-cal/index.vue",
   "keywords": [
     "full calendar",
     "calendar",
@@ -15,7 +14,7 @@
     "ui"
   ],
   "files": [
-    "dist",
+    "src/components/vue-cal/",
     "package.json",
     "README.md",
     "LICENSE"
@@ -46,5 +45,8 @@
     "vue-template-compiler": "^2.6.10",
     "vuetify": "^2.0.18"
   },
-  "dependencies": {}
+  "dependencies": {
+    "pug": "^2.0.3",
+    "pug-plain-loader": "^1.0.0"
+  }
 }
