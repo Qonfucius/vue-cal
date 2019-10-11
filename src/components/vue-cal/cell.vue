@@ -35,6 +35,14 @@
           :overlaps-streak="splits.length ? split.overlapsStreak : cellOverlapsStreak")
           template(v-slot:event-renderer="{ event, view }")
             slot(name="event-renderer" :view="view" :event="event")
+      .vuecal__dom-cell(
+        v-if="['week', 'day'].includes(view) && $parent.domCells" v-for="(cell, j) in $parent.timeCells" :key="j" :style="`height: ${$parent.timeCellHeight}px`"
+        @mousedown="onDomCellClick(j, i)"
+        @mouseup="onDomCellRelease()"
+        @mouseenter="onDomCellHover(j)"
+        @mouseleave="onDomCellLeave(j)"
+        :class="{'vuecal__dom-cell-clicking-hovered': $parent.clicking === (view === 'week' ? data.formattedDate : i) && $parent.cellsHoveredWhileClicking.includes(j)}"
+      )
     .vuecal__now-line(v-if="timelineVisible" :style="`top: ${todaysTimePosition}px`" :key="options.transitions ? `${view}-now-line` : 'now-line'")
 </template>
 
@@ -197,6 +205,29 @@ export default {
       // Updating `now` will re-trigger the computed `todaysTimePosition`.
       this.now = new Date()
       this.timeTickerIds[1] = setTimeout(this.timeTick, 60000) // Every minute.
+    },
+
+    onDomCellClick (i, split) {
+      this.$parent.clicking = (this.view === 'week' ? this.data.formattedDate : split)
+      this.$parent.cellsHoveredWhileClicking.push(i)
+    },
+
+    onDomCellRelease () {
+      this.$parent.clicking = null
+      this.$parent.cellsHoveredWhileClicking = []
+    },
+
+    onDomCellHover (i) {
+      this.$parent.currentDomCellHovered = i
+      if (this.$parent.clicking) {
+        this.$parent.cellsHoveredWhileClicking.push(i)
+      }
+    },
+
+    onDomCellLeave (i) {
+      if (this.$parent.currentDomCellHovered === i) {
+        this.$parent.currentDomCellHovered = null
+      }
     }
   },
 

@@ -61,7 +61,8 @@
         .vuecal__bg(:class="{ vuecal__flex: !hasTimeColumn }" column)
           .vuecal__flex(row grow)
             .vuecal__time-column(v-if="hasTimeColumn")
-              .vuecal__time-cell(v-for="(cell, i) in timeCells" :key="i" :style="`height: ${timeCellHeight}px`")
+              .vuecal__time-cell(v-for="(cell, i) in timeCells" :key="i" :style="`height: ${timeCellHeight}px`"
+                :class="{'vuecal__time-cell-clicked-hover': (clicking && cellsHoveredWhileClicking.includes(i))  || currentDomCellHovered === i}")
                 slot(name="time-cell" :hours="cell.hours" :minutes="cell.minutes")
                   span.line {{ cell.label }}
             .vuecal__flex.vuecal__week-numbers(v-if="showWeekNumbers && view.id === 'month'" column)
@@ -179,7 +180,8 @@ export default {
     onEventDblclick: { type: [Function, null], default: null },
     onEventCreate: { type: [Function, null], default: null },
     transitions: { type: Boolean, default: true },
-    splitDaysInHeader: { type: Boolean, default: false }
+    splitDaysInHeader: { type: Boolean, default: false },
+    domCells: { type: Boolean, default: false }
   },
   data: () => ({
     // Make texts reactive before a locale is loaded.
@@ -258,7 +260,10 @@ export default {
     // An array of mutable events updated each time given external events array changes.
     mutableEvents: [],
     // Transition when switching view. left when going toward the past, right when going toward future.
-    transitionDirection: 'right'
+    transitionDirection: 'right',
+    clicking: null,
+    cellsHoveredWhileClicking: [],
+    currentDomCellHovered: null
   }),
 
   methods: {
@@ -569,6 +574,8 @@ export default {
      */
     onMouseUp (e) {
       let { resizeAnEvent, clickHoldAnEvent, clickHoldACell } = this.domEvents
+      this.clicking = false
+      this.cellsHoveredWhileClicking = []
 
       // On event resize end, emit event if duration has changed.
       if (resizeAnEvent._eid) {
@@ -913,7 +920,7 @@ export default {
   mounted () {
     const hasTouch = 'ontouchstart' in window
 
-    if (this.editableEvents) {
+    if (this.editableEvents || this.$listeners['click-and-release']) {
       window.addEventListener(hasTouch ? 'touchmove' : 'mousemove', this.onMouseMove, { passive: false })
       window.addEventListener(hasTouch ? 'touchend' : 'mouseup', this.onMouseUp)
       window.addEventListener('keyup', this.onKeyUp)
