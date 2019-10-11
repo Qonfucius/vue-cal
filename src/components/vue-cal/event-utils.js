@@ -27,6 +27,37 @@ export const eventDefaults = {
   classes: []
 }
 
+// Return a partial vue-cal event
+export const partialEvent = (startTime, endTime, eventOptions, vuecal) => {
+  if (typeof startTime === 'string') startTime = stringToDate(startTime)
+  if (!(startTime instanceof Date)) return false
+  if (typeof endTime === 'string') endTime = stringToDate(endTime)
+  if (!(endTime instanceof Date)) return false
+
+  const hours = startTime.getHours()
+  const minutes = startTime.getMinutes()
+  const startTimeMinutes = hours * 60 + minutes
+  const hoursEnd = endTime.getHours()
+  const minutesEnd = endTime.getMinutes()
+  const endTimeMinutes = hoursEnd * 60 + minutesEnd
+  const formattedHours = (hours < 10 ? '0' : '') + hours
+  const formattedHoursEnd = (hoursEnd < 10 ? '0' : '') + hoursEnd
+  const formattedMinutes = (minutes < 10 ? '0' : '') + minutes
+  const formattedMinutesEnd = (minutesEnd < 10 ? '0' : '') + minutesEnd
+  const start = formatDate(startTime, null, vuecal.texts) + (vuecal.time ? ` ${formattedHours}:${formattedMinutes}` : '')
+  const end = formatDate(endTime, null, vuecal.texts) + (vuecal.time ? ` ${formattedHoursEnd}:${formattedMinutesEnd}` : '')
+
+  return {
+    start,
+    startDate: startTime,
+    startTimeMinutes,
+    end,
+    endDate: endTime,
+    endTimeMinutes,
+    ...eventOptions
+  }
+}
+
 // Create an event at the given date and time, and allow overriding
 // event attributes through the eventOptions object.
 export const createAnEvent = (dateTime, eventOptions, vuecal) => {

@@ -118,7 +118,7 @@
 
 <script>
 import { isDateToday, getPreviousFirstDayOfWeek, formatDate, formatTime, stringToDate, countDays } from './date-utils'
-import { eventDefaults, createAnEvent, createEventSegments, addEventSegment, removeEventSegment, eventInRange } from './event-utils'
+import { eventDefaults, createAnEvent, partialEvent, createEventSegments, addEventSegment, removeEventSegment, eventInRange } from './event-utils'
 import Header from './header'
 import WeekdaysHeadings from './weekdays-headings'
 import Cell from './cell'
@@ -782,6 +782,23 @@ export default {
      */
     createEvent (dateTime, eventOptions = {}) {
       return createAnEvent(dateTime, eventOptions, this)
+    },
+
+    /**
+    * Fire an event with a partial vue-cal event, on click, drag and release.
+    * This is event is not added to the mutableEvents Array
+    *
+    * @param {Date} startDate date of the cell
+    * @param {Object} mouseDownEvent mouseEvent where the click started
+    * @param {Object} mouseUpEvent mouseEvent where the click finished
+    */
+    onClickAndRelease (startDate, mouseDownEvent, mouseUpEvent, split) {
+      const timeAtMouseDown = new Date(startDate)
+      const timeAtMouseUp = new Date(startDate)
+      timeAtMouseDown.setMinutes(this.minutesAtCursor(mouseDownEvent).startTimeMinutes)
+      timeAtMouseUp.setMinutes(this.minutesAtCursor(mouseUpEvent).startTimeMinutes)
+      const event = partialEvent(timeAtMouseDown, timeAtMouseUp, { split }, this)
+      this.$emit('click-and-release', event)
     },
 
     /**

@@ -17,6 +17,7 @@
       @keypress.enter="$parent.switchToNarrowerView"
       @touchstart="!isDisabled && onCellTouchStart($event, splits.length ? i + 1 : null)"
       @mousedown="!isDisabled && onCellMouseDown($event, splits.length ? i + 1 : null)"
+      @mouseup="!isDisabled && onCellMouseUp($event, splits.length ? i + 1 : null)"
       @click="!isDisabled && selectCell($event)"
       @dblclick="!isDisabled && onCellDblClick($event)")
       slot(name="cell-content" :events="events" :select-cell="$event => selectCell($event, true)" :split="splits.length ? split : false")
@@ -62,7 +63,8 @@ export default {
     // where there is no cursor coords.
     timeAtCursor: null,
     now: new Date(),
-    timeTickerIds: [null, null] // 2 timeouts: 1 to snap to round minutes, then 1 every minute.
+    timeTickerIds: [null, null], // 2 timeouts: 1 to snap to round minutes, then 1 every minute.
+    mouseDownEvent: null // Save the mouseDownEvent, the first step of a clickAndRelease event.
   }),
 
   methods: {
@@ -121,9 +123,26 @@ export default {
       }
     },
 
+    // last step of a clickAndRelease event
+    onCellMouseUp (DOMEvent, split = null, touch = false) {
+      if (this.clickAndRelease && this.mouseDownEvent && this.mouseDownEvent.split === split &&
+        ['week', 'day'].includes(this.view)) {
+        this.$parent.onClickAndRelease(this.data.startDate, this.mouseDownEvent.DOMEvent, DOMEvent, split)
+        this.mouseDownEvent = null
+      }
+    },
+
     onCellMouseDown (DOMEvent, split = null, touch = false) {
       // Prevent a double mouse down on touch devices.
       if ('ontouchstart' in window && !touch) return false
+
+      // Register mouseDownEvent, first step of a clickAndRelease event
+      if (this.clickAndRelease && !this.isDOMElementAnEvent(DOMEvent.target)) {
+        this.mouseDownEvent = {
+          DOMEvent,
+          split
+        }
+      }
 
       let { clickHoldACell, focusAnEvent } = this.domEvents
       // Reinit the click trigger on each mousedown.
@@ -324,6 +343,9 @@ export default {
       const startTimeMinutes = this.now.getHours() * 60 + this.now.getMinutes()
       const minutesFromTop = startTimeMinutes - this.options.timeFrom
       return Math.round(minutesFromTop * this.options.timeCellHeight / this.options.timeStep)
+    },
+    clickAndRelease () {
+      return this.$parent.$listeners['click-and-release']
     }
   },
 
