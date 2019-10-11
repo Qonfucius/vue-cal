@@ -4,7 +4,11 @@
     :options="$props"
     :view-props="{ views, view, weekDaysInHeader }"
     :week-days="weekDays"
-    :switch-to-narrower-view="switchToNarrowerView")
+    :switch-to-narrower-view="switchToNarrowerView"
+    :split-days="splitDays"
+    :split-days-in-header="splitDaysInHeader")
+    template(v-slot:title-bar="{ previous, next }")
+      slot(name="title-bar" :view="view" :switchView="switchView" :previous="previous" :next="next")
     template(v-slot:arrow-prev)
       slot(name="arrow-prev")
         i.angle
@@ -16,6 +20,11 @@
         span.default {{ texts.today }}
     template(v-slot:title)
       slot(name="title" :title="viewTitle" :view="view") {{ viewTitle }}
+    template(v-slot:split-day-column)
+      slot(name="split-day-column" v-if="view.id === 'day'")
+    template(v-slot:split-day="{ split }")
+      slot(name="split-day" :split="split" v-if="view.id === 'day'")
+        .split-day(grow) {{ split.label }}
 
   .vuecal__flex.vuecal__body(v-if="!hideBody" grow)
     transition(:name="`slide-fade--${transitionDirection}`" :appear="transitions")
@@ -169,7 +178,8 @@ export default {
     onEventClick: { type: [Function, null], default: null },
     onEventDblclick: { type: [Function, null], default: null },
     onEventCreate: { type: [Function, null], default: null },
-    transitions: { type: Boolean, default: true }
+    transitions: { type: Boolean, default: true },
+    splitDaysInHeader: { type: Boolean, default: false }
   },
   data: () => ({
     // Make texts reactive before a locale is loaded.

@@ -8,20 +8,22 @@
       @click="$parent.switchView(id, null, true)"
       :aria-label="`${v.label} view`") {{ v.label }}
   .vuecal__title-bar(v-if="!options.hideTitleBar")
-    button.vuecal__arrow.vuecal__arrow--prev(:aria-label="`Previous ${viewProps.view.id}`" @click="previous")
-      slot(name="arrow-prev")
-    .vuecal__flex.vuecal__title(grow)
-      transition(:name="`slide-fade--${transitionDirection}`")
-        component(
-          :is="!!broaderView ? 'button' : 'span'"
-          :aria-label="!!broaderView ? `Go to ${broaderView} view` : false"
-          :key="options.transitions ? `${viewProps.view.id}${viewProps.view.startDate.toString()}` : false"
-          @click="switchToBroaderView")
-          slot(name="title")
-    button.vuecal__today-btn(v-if="options.todayButton" aria-label="Today" @click="goToToday")
-      slot(name="today-button")
-    button.vuecal__arrow.vuecal__arrow--next(:aria-label="`Next ${viewProps.view.id}`" @click="next")
-      slot(name="arrow-next")
+    // Slot to override title bar
+    slot(name="title-bar" :previous="previous" :next="next")
+      button.vuecal__arrow.vuecal__arrow--prev(:aria-label="`Previous ${viewProps.view.id}`" @click="previous")
+        slot(name="arrow-prev")
+      .vuecal__flex.vuecal__title(grow)
+        transition(:name="`slide-fade--${transitionDirection}`")
+          component(
+            :is="!!broaderView ? 'button' : 'span'"
+            :aria-label="!!broaderView ? `Go to ${broaderView} view` : false"
+            :key="options.transitions ? `${viewProps.view.id}${viewProps.view.startDate.toString()}` : false"
+            @click="switchToBroaderView")
+            slot(name="title")
+      button.vuecal__today-btn(v-if="options.todayButton" aria-label="Today" @click="goToToday")
+        slot(name="today-button")
+      button.vuecal__arrow.vuecal__arrow--next(:aria-label="`Next ${viewProps.view.id}`" @click="next")
+        slot(name="arrow-next")
   weekdays-headings(
     v-if="viewProps.weekDaysInHeader"
     :vuecal="$parent"
@@ -30,6 +32,13 @@
     :transition-direction="transitionDirection"
     :switch-to-narrower-view="switchToNarrowerView"
   )
+  // Slot to put splits in headers
+  .vuecal__flex.vuecal__split-days-in-header(row grow v-if="splitDaysInHeader")
+    .vuecal__time-column
+      slot(name="split-day-column")
+    .vuecal__flex(grow wrap)
+      .vuecal__flex.split-day(v-for="(split, i) in splitDays" column)
+        slot(name="split-day" :split="split")
   //- Sticky split-days headers on day view only.
   transition(:name="`slide-fade--${transitionDirection}`")
     .vuecal__flex.vuecal__split-days-headers(v-if="viewProps.view.id === 'day' && $parent.hasSplits && options.stickySplitLabels && !options.minSplitWidth")
@@ -58,6 +67,14 @@ export default {
     switchToNarrowerView: {
       type: Function,
       default: () => {}
+    },
+    splitDays: {
+      type: Array,
+      default: () => []
+    },
+    splitDaysInHeader: {
+      type: Boolean,
+      default: false
     }
   },
 
@@ -187,6 +204,15 @@ export default {
     }
 
     &--prev i.angle {border-width: 2px 0 0 2px;}
+  }
+
+  &__split-days-in-header {
+    .vuecal__flex, .vuecal__flex[column] {
+      flex: 1 1 0;
+    }
+    .split-day {
+      text-align: center;
+    }
   }
 }
 
