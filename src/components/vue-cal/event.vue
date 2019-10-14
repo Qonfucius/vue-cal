@@ -53,6 +53,18 @@ export default {
       type: Number,
       default: 0
     },
+    domPosition: {
+      type: Number,
+      default: 0
+    },
+    otherCellHovered: {
+      type: Boolean,
+      default: false
+    },
+    cellHovering: {
+      type: Function,
+      default: () => {}
+    },
     overlapsStreak: {
       type: Number,
       default: 0
@@ -90,11 +102,17 @@ export default {
     },
 
     onMouseEnter (e) {
+      if (!this.event.background) {
+        this.cellHovering()
+      }
       e.preventDefault()
       this.vuecal.emitWithEvent('event-mouse-enter', this.event)
     },
 
     onMouseLeave (e) {
+      if (!this.event.background) {
+        this.cellHovering(false)
+      }
       e.preventDefault()
       this.vuecal.emitWithEvent('event-mouse-leave', this.event)
     },
@@ -189,6 +207,7 @@ export default {
         'vuecal__event--background': this.event.background,
         'vuecal__event--deletable': this.event.deleting,
         'vuecal__event--all-day': this.event.allDay,
+        'vuecal__event--overlapping': this.domPosition === this.overlaps.length && !this.otherCellHovered,
         // Multiple days events.
         'vuecal__event--multiple-days': !!this.segment,
         'event-start': this.segment && isFirstDay && !isLastDay,

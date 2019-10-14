@@ -32,6 +32,9 @@
           :cell-events="splits.length ? split.events : events"
           :overlaps="((splits.length ? split.overlaps[event._eid] : cellOverlaps[event._eid]) || []).overlaps"
           :event-position="((splits.length ? split.overlaps[event._eid] : cellOverlaps[event._eid]) || []).position"
+          :dom-position="((splits.length ? split.overlaps[event._eid] : cellOverlaps[event._eid]) || []).domPosition"
+          :other-cell-hovered="cellHovered"
+          :cell-hovering="cellHovering"
           :overlaps-streak="splits.length ? split.overlapsStreak : cellOverlapsStreak")
           template(v-slot:event-renderer="{ event, view }")
             slot(name="event-renderer" :view="view" :event="event")
@@ -72,7 +75,8 @@ export default {
     timeAtCursor: null,
     now: new Date(),
     timeTickerIds: [null, null], // 2 timeouts: 1 to snap to round minutes, then 1 every minute.
-    mouseDownEvent: null // Save the mouseDownEvent, the first step of a clickAndRelease event.
+    mouseDownEvent: null, // Save the mouseDownEvent, the first step of a clickAndRelease event.
+    cellHovered: false
   }),
 
   methods: {
@@ -105,6 +109,10 @@ export default {
 
       selectCell(force, this.$parent, this.timeAtCursor, split)
       this.timeAtCursor = null
+    },
+
+    cellHovering (hovered = true) {
+      this.cellHovered = hovered
     },
 
     /**
