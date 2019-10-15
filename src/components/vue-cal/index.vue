@@ -729,10 +729,12 @@ export default {
         if (['00:00', '24:00'].includes(endTime)) {
           endDate.setSeconds(-1) // End at 23:59:59.
           endDateF = this.formatDate(endDate)
+          hoursEnd = endDate.getHours()
+          minutesEnd = endDate.getMinutes()
         }
 
         const endTimeMinutes = parseInt(hoursEnd) * 60 + parseInt(minutesEnd)
-        end = event.end || endDateF + ' ' + formatTime(endTimeMinutes)
+        end = endDateF + ' ' + formatTime(endTimeMinutes)
 
         const multipleDays = startDateF !== endDateF
 
@@ -921,7 +923,9 @@ export default {
     const hasTouch = 'ontouchstart' in window
 
     if (this.editableEvents || this.$listeners['click-and-release']) {
-      window.addEventListener(hasTouch ? 'touchmove' : 'mousemove', this.onMouseMove, { passive: false })
+      if (this.editableEvents) {
+        window.addEventListener(hasTouch ? 'touchmove' : 'mousemove', this.onMouseMove, { passive: false })
+      }
       window.addEventListener(hasTouch ? 'touchend' : 'mouseup', this.onMouseUp)
       window.addEventListener('keyup', this.onKeyUp)
     }
